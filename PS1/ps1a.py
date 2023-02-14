@@ -60,8 +60,34 @@ def greedy_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    # TODO: Your code here
-    pass
+    # create a list of cow (name, weight) pairs reverse-sorted by weight
+    cows_sorted = sorted(cows.items(), key=lambda x:x[1], reverse=True) # lambda to index the value of the item in dict
+    
+    # initialize overall list of trips
+    trips = []
+    
+    # make the trips as long as there are cows left to take
+    while len(cows_sorted) != 0:
+        trip = []
+        weight = 0
+        i = 0
+        while weight <= limit and len(cows_sorted) != 0:
+            print('value of i:', i)
+            # try the heaviest cow (always first element)
+            cow, w = cows_sorted[i]
+            
+            # check that weight limit still met and cow not already taken
+            if (weight + w <= limit) and cow not in trip:
+                trip.append(cow) # put cow on trip
+                weight += w # add cow's weight to total trip weight
+                print(f"{cow} weighing {w} added to trip. Total trip weight:", weight)
+                cows_sorted.remove(cows_sorted[i]) # removes cow from list of cows not taken
+            elif (i + 1 < len(cows_sorted)) and len(cows_sorted)>1:
+                i += 1 # try the next heaviest cow
+            else:
+                break # if no more cows can fit
+        trips.append(trip)
+    return trips
 
 # Problem 3
 def brute_force_cow_transport(cows,limit=10):
