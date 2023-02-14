@@ -1,6 +1,6 @@
 ###########################
 # 6.0002 Problem Set 1a: Space Cows 
-# Name:
+# Name: Octavio Vega
 # Collaborators:
 # Time:
 
@@ -24,8 +24,18 @@ def load_cows(filename):
     Returns:
     a dictionary of cow name (string), weight (int) pairs
     """
-    # TODO: Your code here
-    pass
+    # initialize dictionary to store cow names as keys and weights as values
+    cow_dict = {}
+
+    # open the file and read lines to get data
+    with open(filename, 'r') as f:
+        for line in f:
+            data = line.split(',')
+            name = data[0]
+            weight = int(data[1]) # convert weight from str to int
+            cow_dict[name] = weight # enter into dictionary
+    
+    return cow_dict
 
 # Problem 2
 def greedy_cow_transport(cows,limit=10):
