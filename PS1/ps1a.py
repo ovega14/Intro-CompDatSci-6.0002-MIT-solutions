@@ -71,8 +71,8 @@ def greedy_cow_transport(cows,limit=10):
         trip = []
         weight = 0
         i = 0
+        print('\nNew trip started. Total weight:', weight)
         while weight <= limit and len(cows_sorted) != 0:
-            print('value of i:', i)
             # try the heaviest cow (always first element)
             cow, w = cows_sorted[i]
             
@@ -87,6 +87,9 @@ def greedy_cow_transport(cows,limit=10):
             else:
                 break # if no more cows can fit
         trips.append(trip)
+        print('Trip Full! Total weight:', weight)
+    print('\nAll cows transported! Total number of trips:', len(trips))
+    print('---------------------------------------------')
     return trips
 
 # Problem 3
