@@ -138,13 +138,15 @@ def brute_force_cow_transport(cows,limit=10):
         return weights
     
     # check if each set in a partition can be a trip
-    for part in get_partitions(cows_dict.keys()):
-        part_weight = get_weight(part, cows_dict)
+    for partition in get_partitions(cows_dict.keys()):
+        part_weight = get_weight(partition, cows_dict)
         
-        # each sub-trip must have a weight not exceeding the limit
-        if all(w <= 10 for w in part_weight):
-            print(f"Successful trip: Transporting {part}")
-            trips.append(part)
+        # all sub-trips in a series of trips must have a weight not exceeding the limit
+        if not all(w <= limit for w in part_weight):
+            continue
+        # take the better (shorter) of new set of trips or previous result stored
+        elif len(trips) == 0 or len(trips) > len(partition):
+            trips = partition
     
     return trips    
 
@@ -162,5 +164,22 @@ def compare_cow_transport_algorithms():
     Returns:
     Does not return anything.
     """
-    # TODO: Your code here
-    pass
+    # load in data
+    cows = load_cows('ps1_cow_data.txt')
+    
+    # test greedy method
+    start = time.time()
+    result = greedy_cow_transport(cows, limit=10)
+    end = time.time()
+    print("Greedy cow transport execution time:", end - start)
+    print(f"Greedy cow transport solved within {len(result)} trips")
+    
+    # test brute force method
+    start = time.time()
+    result = brute_force_cow_transport(cows, limit=10)
+    end = time.time()
+    print("Brute force cow transport finished in", end - start)
+    print(f"Brute force cow transport solved within {len(result)} trips")
+
+if __name__ == '__main__':
+    compare_cow_transport_algorithms()
