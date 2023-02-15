@@ -89,7 +89,7 @@ def greedy_cow_transport(cows,limit=10):
         trips.append(trip)
         print('Trip Full! Total weight:', weight)
     print('\nAll cows transported! Total number of trips:', len(trips))
-    print('---------------------------------------------')
+    print('-----------------------------------------------------------------------------')
     return trips
 
 # Problem 3
@@ -114,9 +114,40 @@ def brute_force_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    # TODO: Your code here
-    pass
+    # make a copy of the cows dictionary
+    cows_dict = dict(cows)
+    
+    # initialize a list to store trips
+    trips = []
+    
+    # helper function to find weights of a partition of cows
+    def get_weight(partition, cows):
+        """
+        Parameters:
+            partition: a list of lists, each inner list is a set of cow names
+            cows: a dictionary of cow (name, weight) pairs
+        Returns: 
+            a list of the weights for each set in the partition
+        """
+        weights = []
+        for s in partition:
+            weight = 0
+            for cow in s:
+                weight += cows[cow]
+            weights.append(weight)
+        return weights
+    
+    # check if each set in a partition can be a trip
+    for part in get_partitions(cows_dict.keys()):
+        part_weight = get_weight(part, cows_dict)
         
+        # each sub-trip must have a weight not exceeding the limit
+        if all(w <= 10 for w in part_weight):
+            print(f"Successful trip: Transporting {part}")
+            trips.append(part)
+    
+    return trips    
+
 # Problem 4
 def compare_cow_transport_algorithms():
     """
