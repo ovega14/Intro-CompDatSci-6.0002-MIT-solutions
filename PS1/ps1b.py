@@ -1,6 +1,6 @@
 ###########################
 # 6.0002 Problem Set 1b: Space Change
-# Name:
+# Name: Octavio Vega
 # Collaborators:
 # Time:
 # Author: charz, cdenise
@@ -13,7 +13,7 @@
 def dp_make_weight(egg_weights, target_weight, memo = {}):
     """
     Find number of eggs to bring back, using the smallest number of eggs. Assumes there is
-    an infinite supply of eggs of each weight, and there is always a egg of value 1.
+    an infinite supply of eggs of each weight, and there is always an egg of value 1.
     
     Parameters:
     egg_weights - tuple of integers, available egg weights sorted from smallest to largest value (1 = d1 < d2 < ... < dk)
@@ -22,8 +22,16 @@ def dp_make_weight(egg_weights, target_weight, memo = {}):
     
     Returns: int, smallest number of eggs needed to make target weight
     """
-    # TODO: Your code here
-    pass
+    # If only 1 egg, number is equal to remaining weight limit
+    if len(egg_weights) == 1:
+        result = target_weight
+        
+    # fill up with as much of the heaviest egg, then fill in the rest with smaller eggs
+    else: 
+        weight = egg_weights[-1]*int(target_weight / egg_weights[-1]) 
+        result = int(target_weight / egg_weights[-1]) + dp_make_weight(egg_weights[:-1], target_weight-weight)
+    
+    return result
 
 # EXAMPLE TESTING CODE, feel free to add more if you'd like
 if __name__ == '__main__':
