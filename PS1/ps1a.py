@@ -66,12 +66,14 @@ def greedy_cow_transport(cows,limit=10):
     # initialize overall list of trips
     trips = []
     
+    #print('-----------------------------------------------------------------------------')
+    #print('Greedy cow transport initiated. Weight limit:', limit)
     # make the trips as long as there are cows left to take
     while len(cows_sorted) != 0:
         trip = []
         weight = 0
         i = 0
-        print('\nNew trip started. Total weight:', weight)
+        #print('\nNew trip started. Total weight:', weight)
         while weight <= limit and len(cows_sorted) != 0:
             # try the heaviest cow (always first element)
             cow, w = cows_sorted[i]
@@ -80,16 +82,16 @@ def greedy_cow_transport(cows,limit=10):
             if (weight + w <= limit) and cow not in trip:
                 trip.append(cow) # put cow on trip
                 weight += w # add cow's weight to total trip weight
-                print(f"{cow} weighing {w} added to trip. Total trip weight:", weight)
+                #print(f"{cow} weighing {w} added to trip. Total trip weight:", weight)
                 cows_sorted.remove(cows_sorted[i]) # removes cow from list of cows not taken
             elif (i + 1 < len(cows_sorted)) and len(cows_sorted)>1:
                 i += 1 # try the next heaviest cow
             else:
                 break # if no more cows can fit
         trips.append(trip)
-        print('Trip Full! Total weight:', weight)
-    print('\nAll cows transported! Total number of trips:', len(trips))
-    print('-----------------------------------------------------------------------------')
+        #print('Trip Full! Total weight:', weight)
+    #print('\nAll cows transported! Total number of trips:', len(trips))
+    #print('-----------------------------------------------------------------------------')
     return trips
 
 # Problem 3
@@ -137,6 +139,8 @@ def brute_force_cow_transport(cows,limit=10):
             weights.append(weight)
         return weights
     
+    #print('-----------------------------------------------------------------------------')
+    #print('Brute force cow transport initiated. Weight limit:', limit)
     # check if each set in a partition can be a trip
     for partition in get_partitions(cows_dict.keys()):
         part_weight = get_weight(partition, cows_dict)
@@ -147,7 +151,8 @@ def brute_force_cow_transport(cows,limit=10):
         # take the better (shorter) of new set of trips or previous result stored
         elif len(trips) == 0 or len(trips) > len(partition):
             trips = partition
-    
+    #print('\All cows transported! Total number of trips:', len(trips))
+    #print('-----------------------------------------------------------------------------')
     return trips    
 
 # Problem 4
@@ -166,6 +171,9 @@ def compare_cow_transport_algorithms():
     """
     # load in data
     cows = load_cows('ps1_cow_data.txt')
+    
+    print('-----------------------------------------------------------------------------')
+    print('NOW TESTING COW TRANSPORT IMPLEMENTATIONS\n')
     
     # test greedy method
     start = time.time()
