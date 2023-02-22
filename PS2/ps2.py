@@ -1,6 +1,6 @@
 # 6.0002 Problem Set 5
 # Graph optimization
-# Name:
+# Name: Octavio Vega
 # Collaborators:
 # Time:
 
@@ -19,8 +19,9 @@ from graph import Digraph, Node, WeightedEdge
 # do the graph's edges represent? Where are the distances
 # represented?
 #
-# Answer:
-#
+# Answer: The nodes represent campus buildings.
+# The edges represent paths between buildings.
+# The distances are represented in the weights on the edges.
 
 
 # Problem 2b: Implementing load_map
