@@ -83,8 +83,9 @@ def load_map(map_filename):
 #
 # What is the objective function for this problem? What are the constraints?
 #
-# Answer:
-#
+# Answer: The objective function is to minimize the distance traveled between
+# the start node and end node. The constraint is to not exceed the maximum
+# distance outdoors.
 
 # Problem 3b: Implement get_best_path
 def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
