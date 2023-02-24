@@ -122,29 +122,41 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then return None.
     """
+    # update the path with new starting node
+    path[0] = path[0] + [start]
+    
+    # return None if best path exceeds the outdoor distance constraint
+    if path[2] > max_dist_outdoors:
+        return None
+    
     # check for valid start and end nodes
     if not (start in digraph.nodes and end in digraph.nodes):
         raise ValueError('Invalid node')
     
     # check if start and end nodes are the same
     elif start == end:
-        return (best_path, best_dist)
+        return best_path, best_dist
     
-    # recursively build the rest of the path
     for edge in digraph.get_edges_for_node(start):
-        if edge.dest in path: # avoid cycles
-            continue
-        if path[2] + edge.outdoor_distance > max_dist_outdoors: # constraint
-            continue
-        if best_path == None or path[1] + edge.total_distance < best_dist:
-            new_path, new_dist = get_best_path(digraph, edge.dest, end, 
-                                               path + [start], 
-                                               max_dist_outdoors - edge.outdoor_distance, 
-                                               best_dist, 
-                                               best_path)
+        # get the node info
+        node = edge.get_destination()
+        
+        # update the distances
+        tot_dist = path[1] + float(edge.get_total_distance())
+        out_dist = path[2] + float(edge.get_outdoor_distance())
+        
+        if node not in path[0]: # avoid cycles
+            updated_path = [path[0], tot_dist, out_dist]
+            new_path = get_best_path(digraph, node, end, 
+                                               updated_path, max_dist_outdoors, 
+                                               best_dist, best_path)
             if new_path != None:
-                best_path, best_dist = new_path, new_dist
-    return (best_path, best_dist)
+                if best_dist == None or new_path[1] < best_dist:
+                    best_path, best_dist = new_path[0], new_path[1]
+        else:
+            #print(f'Already visited building {node}.')
+            pass
+    return best_path, best_dist
 
 # Problem 3c: Implement directed_dfs
 def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
@@ -175,8 +187,25 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then raises a ValueError.
     """
-    # TODO
-    pass
+    # initialize empty path
+    path = [[], 0, 0]
+    
+    # get best possible path
+    result = get_best_path(digraph, start, end, path, max_dist_outdoors, 
+                           best_dist=None, best_path=None)
+    
+    # raise error if no valid paths
+    if result[1] is None:
+        raise ValueError(f'There is no valid path from {start} to {end}.')
+    
+    else:
+        # raise error if all paths exceed the total distance constraint
+        if result[1] > max_total_dist:
+            raise ValueError(f'All paths from {start} to {end} exceeded distance limit of {max_total_dist}.')
+        
+        # return best valid path
+        else:
+            return result[0]
 
 
 # ================================================================
