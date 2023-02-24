@@ -135,7 +135,7 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
     
     # check if start and end nodes are the same
     elif start == end:
-        return best_path, best_dist
+        return path[0], path[1]
     
     for edge in digraph.get_edges_for_node(start):
         # get the node info
@@ -153,9 +153,7 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
             if new_path != None:
                 if best_dist == None or new_path[1] < best_dist:
                     best_path, best_dist = new_path[0], new_path[1]
-        else:
-            #print(f'Already visited building {node}.')
-            pass
+
     return best_path, best_dist
 
 # Problem 3c: Implement directed_dfs
@@ -201,7 +199,8 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
     else:
         # raise error if all paths exceed the total distance constraint
         if result[1] > max_total_dist:
-            raise ValueError(f'All paths from {start} to {end} exceeded distance limit of {max_total_dist}.')
+            raise ValueError(f'All paths from {start} to {end} exceeded \
+                             distance limit of {max_total_dist}.')
         
         # return best valid path
         else:
