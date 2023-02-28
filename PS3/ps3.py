@@ -154,7 +154,7 @@ class RectangularRoom(object):
         pos: a Position object.
         Returns: True if pos is in the room, False otherwise.
         """
-        return (pos.get_x(), pos.get_y()) in self.tiles
+        return ((pos.get_x(), pos.get_y()) in self.tiles)
         
     def get_dirt_amount(self, m, n):
         """
@@ -221,7 +221,7 @@ class Robot(object):
             raise ValueError('speed must be positive')
         self.speed = speed
         
-        if self.capacity <= 0:
+        if capacity <= 0:
             raise ValueError('capacity must be positive')
         self.capacity = capacity
         
@@ -286,7 +286,7 @@ class EmptyRoom(RectangularRoom):
         
         Returns: True if pos is in the room, False otherwise.
         """
-        return RectangularRoom.is_position_in_room(pos)
+        return self.is_position_in_room(pos)
         
     def get_random_position(self):
         """
@@ -407,10 +407,22 @@ class StandardRobot(Robot):
         rotate once to a random new direction, and stay stationary) and clean the dirt on the tile
         by its given capacity. 
         """
-        raise NotImplementedError
-
+        # get the current position
+        pos = self.get_robot_position()
+        
+        # update position according to trajectory
+        new_pos = pos.get_new_position(self.direction, self.speed)
+        self.set_robot_position(new_pos)
+        
+        # check if new position invalid and rotate to new direction if so
+        while not self.room.is_position_valid(self.get_robot_position()):
+            self.set_robot_direction(360*random.random())
+        
+        # clean the dirt on new tile
+        self.room.clean_tile_at_position(self.get_robot_position(), self.capacity)
+        
 # Uncomment this line to see your implementation of StandardRobot in action!
-#test_robot_movement(StandardRobot, EmptyRoom)
+test_robot_movement(StandardRobot, EmptyRoom)
 #test_robot_movement(StandardRobot, FurnishedRoom)
 
 # === Problem 4
