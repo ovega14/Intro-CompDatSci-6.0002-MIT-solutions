@@ -154,7 +154,10 @@ class RectangularRoom(object):
         pos: a Position object.
         Returns: True if pos is in the room, False otherwise.
         """
-        return ((pos.get_x(), pos.get_y()) in self.tiles)
+        # check if corner coords corresponding to position are in tile grid
+        x = math.floor(pos.get_x())
+        y = math.floor(pos.get_y())
+        return (x, y) in self.tiles
         
     def get_dirt_amount(self, m, n):
         """
@@ -256,7 +259,7 @@ class Robot(object):
 
         direction: float representing an angle in degrees
         """
-        self.direction = direction // 360.0
+        self.direction = direction % 360
 
     def update_position_and_clean(self):
         """
@@ -278,7 +281,7 @@ class EmptyRoom(RectangularRoom):
         """
         Returns: an integer; the total number of tiles in the room
         """
-        return self.width*self.height
+        return len(self.tiles.keys())
         
     def is_position_valid(self, pos):
         """
@@ -292,8 +295,8 @@ class EmptyRoom(RectangularRoom):
         """
         Returns: a Position object; a valid random position (inside the room).
         """
-        x_rand = random.random()*(self.width - 1)
-        y_rand = random.random()*(self.height - 1)
+        x_rand = random.uniform(0, self.width)
+        y_rand = random.uniform(0, self.height)
         return Position(x_rand, y_rand)
 
 class FurnishedRoom(RectangularRoom):
@@ -364,14 +367,7 @@ class FurnishedRoom(RectangularRoom):
         """
         Returns: an integer; the total number of tiles in the room that can be accessed.
         """
-        num_valid = 0
-            
-        for tile in self.tiles:
-            pos = Position(*tile)
-            if self.is_position_valid(pos):
-                num_valid += 1
-        
-        return num_valid
+        return len(self.tiles.keys()) - len(self.furniture_tiles)
         
     def get_random_position(self):
         """
@@ -411,7 +407,7 @@ class StandardRobot(Robot):
         pos = self.get_robot_position()
         
         # update position according to trajectory
-        new_pos = pos.get_new_position(self.direction, self.speed)
+        new_pos = pos.get_new_position(self.get_robot_direction(), self.speed)
         
         # clean tile if new position valid
         if self.room.is_position_valid(new_pos):
@@ -469,12 +465,12 @@ class FaultyRobot(Robot):
         pos = self.get_robot_position()
         
         # update position according to trajectory
-        new_pos = pos.get_new_position(self.direction, self.speed)
+        new_pos = pos.get_new_position(self.get_robot_direction(), self.speed)
         
         # not faulty robot behaves like StandardRobot
         if not self.gets_faulty() and self.room.is_position_valid(new_pos):
             self.set_robot_position(new_pos)
-            self.room.clean_tile_at_position(new_pos, self.capacity)
+            self.room.clean_tile_at_position(self.position, self.capacity)
         
         # faulty robot or invalid position will change direction randomly
         else:
