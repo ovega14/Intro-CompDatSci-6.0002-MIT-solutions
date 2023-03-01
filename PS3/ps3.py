@@ -352,7 +352,7 @@ class FurnishedRoom(RectangularRoom):
 
         Returns True if pos is furnished and False otherwise
         """
-        return self.is_tile_furnshed(math.floor(pos.get_x()), 
+        return self.is_tile_furnished(math.floor(pos.get_x()), 
                                      math.floor(pos.get_y()))
         
     def is_position_valid(self, pos):
@@ -501,14 +501,43 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
     robot_type: class of robot to be instantiated (e.g. StandardRobot or
                 FaultyRobot)
     """
-    raise NotImplementedError
+    # list to store number of time steps for each trial
+    time_steps = []
+    
+    # iterate over trials
+    for t in range(num_trials):
+    
+        # create the room to be cleaned
+        room = FurnishedRoom(width, height, dirt_amount)
+        
+        # average over all robots per trial
+        robot_trials = []
+        
+        # create num_robots robots
+        for _ in range(num_robots):
+            robot = robot_type(room, speed, capacity)
+            
+            # remove dirt until specified fraction of room is cleaned
+            num_steps = 0
+            while robot.room.get_num_cleaned_tiles() / robot.room.get_num_tiles() < min_coverage:
+                robot.update_position_and_clean()
+                num_steps += 1
+            
+            robot_trials.append(num_steps)
+        
+        robot_average = sum(robot_trials) / num_robots
+        time_steps.append(robot_average)
+    
+    return sum(time_steps)/num_trials
 
 
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 5, 5, 3, 1.0, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.8, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.9, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(3, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 5, 5, 3, 1.0, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.8, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.9, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(3, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
+print ('avg time steps for standard: ' + str(run_simulation(2, 1.0, 1, 10, 30, 3, 0.8, 50, StandardRobot)))
+print ('avg time steps for faulty: ' + str(run_simulation(2, 1.0, 1, 10, 30, 3, 0.8, 50, FaultyRobot)))
 
 # === Problem 6
 #
@@ -516,7 +545,8 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
 #
 # 1)How does the performance of the two robot types compare when cleaning 80%
 #       of a 20x20 room?
-#
+#   --> On average, the standard robot is able to clean 80% of the 20x20 room
+#       in fewer time steps than the faulty robot.
 #
 # 2) How does the performance of the two robot types compare when two of each
 #       robot cleans 80% of rooms with dimensions 
