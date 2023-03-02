@@ -513,6 +513,9 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
         # create num_robots robots
         robots = [robot_type(room, speed, capacity) for _ in range(num_robots)]
 
+        # start the animation
+        #anim = ps3_visualize.RobotVisualization(num_robots, width, height, True, delay=0.2)
+
         # remove dirt until given fraction of room is clean
         num_steps = 0
         coverage = 0
@@ -521,7 +524,13 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
             for robot in robots:
                 robot.update_position_and_clean()
                 coverage = robot.room.get_num_cleaned_tiles() / robot.room.get_num_tiles()
+            # draw a new frame of animation after robot(s) move
+            #anim.update(room, robots)
+            
         time_steps.append(num_steps)
+        
+        # close the animation
+        #anim.done()
     
     return sum(time_steps)/num_trials
 
