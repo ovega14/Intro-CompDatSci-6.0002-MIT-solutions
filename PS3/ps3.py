@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Problem Set 3: Simulating robots
-# Name:
+# Name: Octavio Vega
 # Collaborators (discussion):
 # Time:
 
@@ -81,13 +81,13 @@ class RectangularRoom(object):
         height: an integer > 0
         dirt_amount: an integer >= 0
         """
-        if not type(width) == int or width <= 0:
+        if width <= 0:
             raise ValueError('width must be positive integer')
-        self.width = width
+        self.width = int(width)
         
-        if not type(height) == int or height <= 0:
+        if height <= 0:
             raise ValueError('height must be positive integer')
-        self.height = height
+        self.height = int(height)
         
         if not type(dirt_amount) == int or dirt_amount < 0:
                 raise ValueError('dirt amount must be non-negative integer')
@@ -95,8 +95,8 @@ class RectangularRoom(object):
         
         # create grid of (initially) dirty tiles
         self.tiles = {}
-        for x in range(width):
-            for y in range(height):
+        for x in range(self.width):
+            for y in range(self.height):
                 self.tiles[(x, y)] = self.dirt_amount
     
     def clean_tile_at_position(self, pos, capacity):
@@ -536,8 +536,6 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
 #print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.9, 50, StandardRobot)))
 #print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
 #print ('avg time steps: ' + str(run_simulation(3, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
-print ('avg time steps for standard: ' + str(run_simulation(2, 1.0, 1, 10, 30, 3, 0.8, 50, StandardRobot)))
-print ('avg time steps for faulty: ' + str(run_simulation(2, 1.0, 1, 10, 30, 3, 0.8, 50, FaultyRobot)))
 
 # === Problem 6
 #
@@ -551,7 +549,8 @@ print ('avg time steps for faulty: ' + str(run_simulation(2, 1.0, 1, 10, 30, 3, 
 # 2) How does the performance of the two robot types compare when two of each
 #       robot cleans 80% of rooms with dimensions 
 #       10x30, 20x15, 25x12, and 50x6?
-#
+#   --> In all 4 of these cases, the standard robot still performs in fewer
+#       time steps than the faulty robot.
 #
 
 def show_plot_compare_strategies(title, x_label, y_label):
