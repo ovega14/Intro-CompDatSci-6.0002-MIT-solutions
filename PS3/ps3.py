@@ -501,7 +501,7 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
     robot_type: class of robot to be instantiated (e.g. StandardRobot or
                 FaultyRobot)
     """
-    # list to store number of time steps for each trial
+    # store number of time steps for each trial
     time_steps = []
     
     # iterate over trials
@@ -510,23 +510,18 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
         # create the room to be cleaned
         room = FurnishedRoom(width, height, dirt_amount)
         
-        # average over all robots per trial
-        robot_trials = []
-        
         # create num_robots robots
-        for _ in range(num_robots):
-            robot = robot_type(room, speed, capacity)
-            
-            # remove dirt until specified fraction of room is cleaned
-            num_steps = 0
-            while robot.room.get_num_cleaned_tiles() / robot.room.get_num_tiles() < min_coverage:
+        robots = [robot_type(room, speed, capacity) for _ in range(num_robots)]
+
+        # remove dirt until given fraction of room is clean
+        num_steps = 0
+        coverage = 0
+        while coverage < min_coverage:
+            num_steps += 1
+            for robot in robots:
                 robot.update_position_and_clean()
-                num_steps += 1
-            
-            robot_trials.append(num_steps)
-        
-        robot_average = sum(robot_trials) / num_robots
-        time_steps.append(robot_average)
+                coverage = robot.room.get_num_cleaned_tiles() / robot.room.get_num_tiles()
+        time_steps.append(num_steps)
     
     return sum(time_steps)/num_trials
 
