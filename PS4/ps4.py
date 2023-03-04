@@ -128,7 +128,6 @@ class SimpleBacteria(object):
         Raises:
             NoChildException if this bacteria cell does not reproduce.
         """
-        # if bacteria reproduces, generates new SimpleBacteria
         if random.random() >= self.birth_prob*(1 - pop_density):
             return SimpleBacteria(self.birth_prob, self.death_prob)
         else:
@@ -146,7 +145,8 @@ class Patient(object):
             max_pop (int): Maximum possible bacteria population size for
                 this patient
         """
-        pass  # TODO
+        self.bacteria = bacteria
+        self.max_pop = max_pop
 
     def get_total_pop(self):
         """
@@ -155,7 +155,7 @@ class Patient(object):
         Returns:
             int: The total bacteria population
         """
-        pass  # TODO
+        return len(self.bacteria)
 
     def update(self):
         """
@@ -181,7 +181,18 @@ class Patient(object):
         Returns:
             int: The total bacteria population at the end of the update
         """
-        pass  # TODO
+        surviving_bacteria = [bact for bact in self.bacteria if not bact.is_killed()]
+
+        # current bacteria population density
+        curr_density = len(surviving_bacteria) / self.max_pop
+
+        # collect offspring bacteria
+        offspring_bacteria = [bact.reproduce(curr_density) for bact in surviving_bacteria]
+
+        # update the patient's bacteria
+        self.bacteria = surviving_bacteria + offspring_bacteria
+
+        return len(self.bacteria)
 
 
 ##########################
