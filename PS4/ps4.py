@@ -367,11 +367,13 @@ class ResistantBacteria(SimpleBacteria):
                 bacteria cell. This is the maximum probability of the
                 offspring acquiring antibiotic resistance
         """
-        pass  # TODO
+        SimpleBacteria.__init__(self, birth_prob, death_prob)
+        self.resistant = resistant
+        self.mut_prob = mut_prob
 
     def get_resistant(self):
         """Returns whether the bacteria has antibiotic resistance"""
-        pass  # TODO
+        return self.resistant
 
     def is_killed(self):
         """Stochastically determines whether this bacteria cell is killed in
@@ -385,7 +387,10 @@ class ResistantBacteria(SimpleBacteria):
             bool: True if the bacteria dies with the appropriate probability
                 and False otherwise.
         """
-        pass  # TODO
+        if self.get_resistant():
+            return random.random() <= self.death_prob
+        else:
+            return random.random() <= self.death_prob / 4
 
     def reproduce(self, pop_density):
         """
@@ -416,7 +421,21 @@ class ResistantBacteria(SimpleBacteria):
             as this bacteria. Otherwise, raises a NoChildException if this
             bacteria cell does not reproduce.
         """
-        pass  # TODO
+        # probability of reproduction
+        reproduce_prob = self.birth_prob*(1 - pop_density)
+
+        if random.random() <= reproduce_prob and self.get_resistant():
+            return ResistantBacteria(self.birth_prob, self.death_prob, 
+                                     True, self.mut_prob)
+        
+        elif random.random() <= reproduce_prob and not self.get_resistant():
+            resist_prob = self.mut_prob*(1 - pop_density)
+            return ResistantBacteria(self.birth_prob, self.death_prob,
+                                     random.random() <= resist_prob, self.mut_prob)
+        
+        else:
+            raise NoChildException
+
 
 
 class TreatedPatient(Patient):
