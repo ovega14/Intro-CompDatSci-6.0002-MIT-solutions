@@ -100,7 +100,7 @@ class SimpleBacteria(object):
         Returns:
             bool: True with probability self.death_prob, False otherwise.
         """
-        return random.random() >= self.death_prob
+        return random.random() <= self.death_prob
 
     def reproduce(self, pop_density):
         """
@@ -128,10 +128,10 @@ class SimpleBacteria(object):
         Raises:
             NoChildException if this bacteria cell does not reproduce.
         """
-        if random.random() >= self.birth_prob*(1 - pop_density):
+        if random.random() <= self.birth_prob*(1 - pop_density):
             return SimpleBacteria(self.birth_prob, self.death_prob)
         else:
-            raise NoChildException('This bacteria cell does not reproduce')
+            raise NoChildException()
 
 class Patient(object):
     """
@@ -187,7 +187,13 @@ class Patient(object):
         curr_density = len(surviving_bacteria) / self.max_pop
 
         # collect offspring bacteria
-        offspring_bacteria = [bact.reproduce(curr_density) for bact in surviving_bacteria]
+        offspring_bacteria = []
+        for bact in surviving_bacteria:
+            try:
+                new_bact = bact.reproduce(curr_density)
+                offspring_bacteria.append(new_bact)
+            except NoChildException:
+                continue
 
         # update the patient's bacteria
         self.bacteria = surviving_bacteria + offspring_bacteria
@@ -248,11 +254,31 @@ def simulation_without_antibiotic(num_bacteria,
         populations (list of lists or 2D array): populations[i][j] is the
             number of bacteria in trial i at time step j
     """
-    pass  # TODO
+    populations = []
+    for t in range(num_trials):
+        # create num_bacteria of SimpleBacteria
+        bacteria = [SimpleBacteria(birth_prob, death_prob) for _ in range(num_bacteria)]
+
+        # create Patient from the bacteria
+        patient = Patient(bacteria, max_pop)
+
+        # simulate patient's bacteria evolution over 300 time steps
+        bacteria_populations = [patient.get_total_pop()]
+        for i in range(300):
+            patient.update()
+            bacteria_populations.append(patient.get_total_pop())
+        populations.append(bacteria_populations)
+    
+    # plot the time evolution of the average bacteria populations
+    avg_populations = [calc_pop_avg(populations, i) for i in range(301)]
+    make_one_curve_plot(list(range(301)), avg_populations, 
+                        'Timestep', 'Average Population', 'Without Antibiotic')
+
+    return populations
 
 
 # When you are ready to run the simulation, uncomment the next line
-# populations = simulation_without_antibiotic(100, 1000, 0.1, 0.025, 50)
+#populations = simulation_without_antibiotic(100, 1000, 0.1, 0.025, 50)
 
 ##########################
 # PROBLEM 3
