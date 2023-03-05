@@ -618,7 +618,7 @@ def simulation_with_antibiotic(num_bacteria,
 
 # When you are ready to run the simulations, uncomment the next lines one
 # at a time
-total_pop, resistant_pop = simulation_with_antibiotic(num_bacteria=100,
+total_popA, resistant_popA = simulation_with_antibiotic(num_bacteria=100,
                                                       max_pop=1000,
                                                       birth_prob=0.3,
                                                       death_prob=0.2,
@@ -626,10 +626,20 @@ total_pop, resistant_pop = simulation_with_antibiotic(num_bacteria=100,
                                                       mut_prob=0.8,
                                                       num_trials=50)
 
-total_pop, resistant_pop = simulation_with_antibiotic(num_bacteria=100,
+total_popB, resistant_popB = simulation_with_antibiotic(num_bacteria=100,
                                                       max_pop=1000,
                                                       birth_prob=0.17,
                                                       death_prob=0.2,
                                                       resistant=False,
                                                       mut_prob=0.8,
                                                       num_trials=50)
+
+# compute 95% confidence intervals at time step 299
+print('\n95% Confidence Interval - Simulation A, total_pop:', 
+      calc_95_ci(total_popA, 299))
+print('\n95% Confidence Interval - Simulation A, resistant_pop:', 
+      calc_95_ci(resistant_popA, 299))
+print('\n95% Confidence Interval - Simulation B, total_pop:', 
+      calc_95_ci(total_popB, 299))
+print('\n95% Confidence Interval - Simulation B, resistant_pop:', 
+      calc_95_ci(resistant_popB, 299))
