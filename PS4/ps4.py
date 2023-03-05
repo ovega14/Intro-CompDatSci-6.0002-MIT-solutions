@@ -305,7 +305,13 @@ def calc_pop_std(populations, t):
         float: the standard deviation of populations across different trials at
              a specific time step
     """
-    pass  # TODO
+    # population mean at time step t
+    pop_avg = calc_pop_avg(populations, t)
+
+    # squared distances of population sizes from mean
+    dist_sq = [(populations[i][t] - pop_avg)**2 for i in range(len(populations))]
+
+    return (sum(dist_sq)/len(dist_sq))**0.5
 
 
 def calc_95_ci(populations, t):
