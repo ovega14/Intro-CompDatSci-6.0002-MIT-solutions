@@ -643,3 +643,4 @@ print('\n95% Confidence Interval - Simulation B, total_pop:',
       calc_95_ci(total_popB, 299))
 print('\n95% Confidence Interval - Simulation B, resistant_pop:', 
       calc_95_ci(resistant_popB, 299))
+print()
