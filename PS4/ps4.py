@@ -578,8 +578,43 @@ def simulation_with_antibiotic(num_bacteria,
             resistant_pop[i][j] is the number of resistant bacteria for
             trial i at time step j
     """
-    pass  # TODO
-
+    populations = []
+    resistant_pop = []
+    for t in range(num_trials):
+        # create num_bacteria of ResistantBacteria
+        bacteria = [ResistantBacteria(birth_prob, death_prob, resistant, mut_prob)\
+                    for _ in range(num_bacteria)]
+        
+        # create a TreatedPatient from the bacteria
+        patient = TreatedPatient(bacteria, max_pop)
+        
+        # evolve 150 time steps without antibiotic
+        bacteria_population = [patient.get_total_pop()]
+        resistant_population = [patient.get_resist_pop()]
+        for i in range(150):
+            patient.update()
+            bacteria_population.append(patient.get_total_pop())
+            resistant_population.append(patient.get_resist_pop())
+        
+        # evolve 250 time steps with antibiotic
+        patient.set_on_antibiotic()
+        for j in range(250):
+            patient.update()
+            bacteria_population.append(patient.get_total_pop())
+            resistant_population.append(patient.get_resist_pop())
+        
+        # save trial to totals
+        populations.append(bacteria_population)
+        resistant_pop.append(resistant_population)
+    
+    # plot the time evolution of the average bacteria populations
+    avg_populations = [calc_pop_avg(populations, i) for i in range(351)]
+    avg_resistants = [calc_pop_avg(resistant_pop, i) for i in range(351)]
+    make_two_curve_plot(list(range(351)), avg_populations, avg_resistants, 
+                        'Total', 'Resistant', 'Timestep', 'Average Population', 
+                        'With an Antibiotic')
+    
+    return populations, resistant_pop
 
 # When you are ready to run the simulations, uncomment the next lines one
 # at a time
