@@ -335,7 +335,19 @@ def calc_95_ci(populations, t):
 
         I.e., you should return a tuple containing (mean, width)
     """
-    pass  # TODO
+    # sample mean
+    sample_avg = calc_pop_avg(populations, t)
+
+    # sample std
+    sample_std = calc_pop_std(populations, t)
+
+    # estimate SEM
+    SEM = sample_std / len(populations)**0.5
+
+    # width of 95% confidence interval around sample mean
+    ci_95 = 1.96*SEM
+
+    return sample_avg, ci_95
 
 
 ##########################
