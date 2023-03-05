@@ -198,7 +198,7 @@ class Patient(object):
         # update the patient's bacteria
         self.bacteria = surviving_bacteria + offspring_bacteria
 
-        return len(self.bacteria)
+        return self.get_total_pop()
 
 
 ##########################
@@ -429,6 +429,7 @@ class ResistantBacteria(SimpleBacteria):
                                      True, self.mut_prob)
         
         elif random.random() <= reproduce_prob and not self.get_resistant():
+            # probability of developing resistance
             resist_prob = self.mut_prob*(1 - pop_density)
             return ResistantBacteria(self.birth_prob, self.death_prob,
                                      random.random() <= resist_prob, self.mut_prob)
@@ -458,14 +459,15 @@ class TreatedPatient(Patient):
         Don't forget to call Patient's __init__ method at the start of this
         method.
         """
-        pass  # TODO
+        Patient.__init__(self, bacteria, max_pop)
+        self.on_antibiotic = False
 
     def set_on_antibiotic(self):
         """
         Administer an antibiotic to this patient. The antibiotic acts on the
         bacteria population for all subsequent time steps.
         """
-        pass  # TODO
+        self.on_antibiotic = True
 
     def get_resist_pop(self):
         """
@@ -474,7 +476,8 @@ class TreatedPatient(Patient):
         Returns:
             int: the number of bacteria with antibiotic resistance
         """
-        pass  # TODO
+        resistant_bacteria = [bact for bact in self.bacteria if bact.get_resistant()]
+        return len(resistant_bacteria)
 
     def update(self):
         """
@@ -501,7 +504,30 @@ class TreatedPatient(Patient):
         Returns:
             int: The total bacteria population at the end of the update
         """
-        pass  # TODO
+        remaining_bacteria = [bact for bact in self.bacteria if not bact.is_killed()]
+
+        # check if patient is on antibiotic
+        if self.on_antibiotic:
+            surviving_bacteria = [bact for bact in remaining_bacteria if bact.get_resistant()]
+        else:
+            surviving_bacteria = remaining_bacteria
+        
+        # current bacteria population density
+        curr_density = len(surviving_bacteria) / self.max_pop
+
+        # collect offspring bacteria
+        offspring_bacteria = []
+        for bact in surviving_bacteria:
+            try:
+                new_bact = bact.reproduce(curr_density)
+                offspring_bacteria.append(new_bact)
+            except NoChildException:
+                continue
+
+        # update the patient's bacteria
+        self.bacteria = surviving_bacteria + offspring_bacteria
+
+        return self.get_total_pop()
 
 
 ##########################
