@@ -186,8 +186,16 @@ def r_squared(y, estimated):
     Returns:
         a float for the R-squared error term
     """
-    # TODO
-    pass
+    # average of data samples
+    mean = sum(y)/len(y)
+
+    # compute the residual sum of squares
+    ss_res = sum((y - estimated)**2)
+
+    # compute the total sum of squares
+    ss_tot = sum((y - mean)**2)
+    
+    return 1 - ss_res/ss_tot
 
 def evaluate_models_on_training(x, y, models):
     """
