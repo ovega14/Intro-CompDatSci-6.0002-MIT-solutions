@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Problem Set 5: Experimental Analysis
-# Name: 
+# Name: Octavio Vega
 # Collaborators (discussion):
 # Time:
 
@@ -163,8 +163,14 @@ def generate_models(x, y, degs):
         a list of pylab arrays, where each array is a 1-d array of coefficients
         that minimizes the squared error of the fitting polynomial
     """
-    # TODO
-    pass
+    models = []
+    
+    # iterate over the degree of polynomial to be fitted
+    for d in degs:
+        model = pylab.polyfit(x, y, d)
+        models.append(model)
+    
+    return models
 
 
 def r_squared(y, estimated):
