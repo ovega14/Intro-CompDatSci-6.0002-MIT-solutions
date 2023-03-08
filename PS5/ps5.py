@@ -229,18 +229,20 @@ def evaluate_models_on_training(x, y, models):
 
         # for linear model, compute SE/slope
         if len(model) == 2:
-            se_slope = se_over_slope(x, y, pylab.polyval(model), model)
+            se_slope = se_over_slope(x, y, pylab.polyval(model, x), model)
 
         # plot results
+        pylab.figure()
         pylab.plot(x, y, 'bo', label='Data')
-        pylab.plot(x, pylab.polyval(model, x), 'r-', 'Polynomial fit')
+        pylab.plot(x, pylab.polyval(model, x), 'r-', label='Polynomial fit')
         pylab.xlabel('Years')
         pylab.ylabel('Temperature (C)')
         pylab.legend(loc='best')
         if len(model) == 2:
-            pylab.title(f'Best Fit Line: R-squared = {r_sq}, SE/slope = {se_slope}')    
+            pylab.title(f'Best Fit Line: \nR-squared = {r_sq} \nSE/slope = {se_slope}')    
         else:
-            pylab.title(f'Best Fit Degree-{len(model)} Polynomial: R-squared = {r_sq}')
+            pylab.title(f'Best Fit Degree-{len(model)} Polynomial: \nR-squared = {r_sq}')
+        pylab.show()
 
 def gen_cities_avg(climate, multi_cities, years):
     """
@@ -343,7 +345,16 @@ if __name__ == '__main__':
     pass 
 
     # Part A.4
-    # TODO: replace this line with your code
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    temps = []
+    for year in years:
+        temp = climate.get_daily_temp('NEW YORK', 1, 10, year)
+        temps.append(temp)
+    x = pylab.array(years)
+    y = pylab.array(temps)
+    model = pylab.polyfit(x, y, 1)
+    evaluate_models_on_training(x, y, [model])
 
     # Part B
     # TODO: replace this line with your code
