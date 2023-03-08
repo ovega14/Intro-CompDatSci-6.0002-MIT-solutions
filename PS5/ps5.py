@@ -223,8 +223,24 @@ def evaluate_models_on_training(x, y, models):
     Returns:
         None
     """
-    # TODO
-    pass
+    for model in models:
+        # compute R-squared
+        r_sq = r_squared(y, pylab.polyval(model, x))
+
+        # for linear model, compute SE/slope
+        if len(model) == 2:
+            se_slope = se_over_slope(x, y, pylab.polyval(model), model)
+
+        # plot results
+        pylab.plot(x, y, 'bo', label='Data')
+        pylab.plot(x, pylab.polyval(model, x), 'r-', 'Polynomial fit')
+        pylab.xlabel('Years')
+        pylab.ylabel('Temperature (C)')
+        pylab.legend(loc='best')
+        if len(model) == 2:
+            pylab.title(f'Best Fit Line: R-squared = {r_sq}, SE/slope = {se_slope}')    
+        else:
+            pylab.title(f'Best Fit Degree-{len(model)} Polynomial: R-squared = {r_sq}')
 
 def gen_cities_avg(climate, multi_cities, years):
     """
