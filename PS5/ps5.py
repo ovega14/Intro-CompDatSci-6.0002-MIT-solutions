@@ -311,8 +311,8 @@ def rmse(y, estimated):
     Returns:
         a float for the root mean square error term
     """
-    # TODO
-    pass
+    mse = sum((y-estimated)**2)/len(y)
+    return mse**0.5
 
 def gen_std_devs(climate, multi_cities, years):
     """
@@ -359,7 +359,7 @@ def evaluate_models_on_testing(x, y, models):
     # TODO
     pass
 
-#if __name__ == '__main__':
+if __name__ == '__main__':
 
     # Part A.4I: January 10
     #climate = Climate('data.csv')
@@ -388,13 +388,19 @@ def evaluate_models_on_testing(x, y, models):
     # Part B
     #climate = Climate('data.csv')
     #years = list(TRAINING_INTERVAL)
-    #avg_temps = gen_cities_avg(climate, CITIES, years)
+    #y = gen_cities_avg(climate, CITIES, years)
     #x = pylab.array(years)
-    #model = pylab.polyfit(x, avg_temps, 1)
-    #evaluate_models_on_training(x, avg_temps, [model])
+    #model = pylab.polyfit(x, y, 1)
+    #evaluate_models_on_training(x, y, [model])
 
     # Part C
-    # TODO: replace this line with your code
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    avg_temps = gen_cities_avg(climate, CITIES, years)
+    x = pylab.array(years)
+    y = moving_average(avg_temps, 5)
+    model = pylab.polyfit(x, y, 1)
+    evaluate_models_on_training(x, y, [model])
 
     # Part D.2
     # TODO: replace this line with your code
