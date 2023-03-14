@@ -285,8 +285,18 @@ def moving_average(y, window_length):
         an 1-d pylab array with the same length as y storing moving average of
         y-coordinates of the N sample points
     """
-    # TODO
-    pass
+    y_mov_avg = []
+    for i in range(len(y)):
+        if i < window_length - 1:
+            # average up to and including item
+            window = y[:i+1]
+            y_mov_avg.append(sum(window)/len(window))
+        else:
+            # average current with previous window_length-1 items
+            window = y[i-window_length+1:i+1]
+            y_mov_avg.append(sum(window)/len(window))
+    
+    return y_mov_avg
 
 def rmse(y, estimated):
     """
@@ -349,7 +359,7 @@ def evaluate_models_on_testing(x, y, models):
     # TODO
     pass
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
     # Part A.4I: January 10
     #climate = Climate('data.csv')
@@ -376,12 +386,12 @@ if __name__ == '__main__':
     #evaluate_models_on_training(x, y, [model])
 
     # Part B
-    climate = Climate('data.csv')
-    years = list(TRAINING_INTERVAL)
-    avg_temps = gen_cities_avg(climate, CITIES, years)
-    x = pylab.array(years)
-    model = pylab.polyfit(x, avg_temps, 1)
-    evaluate_models_on_training(x, avg_temps, [model])
+    #climate = Climate('data.csv')
+    #years = list(TRAINING_INTERVAL)
+    #avg_temps = gen_cities_avg(climate, CITIES, years)
+    #x = pylab.array(years)
+    #model = pylab.polyfit(x, avg_temps, 1)
+    #evaluate_models_on_training(x, avg_temps, [model])
 
     # Part C
     # TODO: replace this line with your code
