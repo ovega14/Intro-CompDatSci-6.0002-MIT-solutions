@@ -259,8 +259,17 @@ def gen_cities_avg(climate, multi_cities, years):
         this array corresponds to the average annual temperature over the given
         cities for a given year.
     """
-    # TODO
-    pass
+    avg_temps = []
+    for year in years:
+        city_temps = []
+        for city in multi_cities:
+            temps = climate.get_yearly_temp(city, year)
+            city_temps.append(sum(temps)/len(temps))
+        
+        # average over all cities in each year
+        avg_temps.append(sum(city_temps)/len(city_temps))
+    
+    return pylab.array(avg_temps)
 
 def moving_average(y, window_length):
     """
@@ -342,22 +351,37 @@ def evaluate_models_on_testing(x, y, models):
 
 if __name__ == '__main__':
 
-    pass 
+    # Part A.4I: January 10
+    #climate = Climate('data.csv')
+    #years = list(TRAINING_INTERVAL)
+    #temps = []
+    #for year in years:
+    #    temp = climate.get_daily_temp('NEW YORK', 1, 10, year)
+    #    temps.append(temp)
+    #x = pylab.array(years)
+    #y = pylab.array(temps)
+    #model = pylab.polyfit(x, y, 1)
+    #evaluate_models_on_training(x, y, [model])
 
-    # Part A.4
-    climate = Climate('data.csv')
-    years = list(TRAINING_INTERVAL)
-    temps = []
-    for year in years:
-        temp = climate.get_daily_temp('NEW YORK', 1, 10, year)
-        temps.append(temp)
-    x = pylab.array(years)
-    y = pylab.array(temps)
-    model = pylab.polyfit(x, y, 1)
-    evaluate_models_on_training(x, y, [model])
+    # Part A.4II: Annual Temperature
+    #climate = Climate('data.csv')
+    #years = list(TRAINING_INTERVAL)
+    #avg_temps = []
+    #for year in years:
+    #    temps = climate.get_yearly_temp('NEW YORK', year)
+    #    avg_temps.append(sum(temps)/len(temps))
+    #x = pylab.array(years)
+    #y = pylab.array(avg_temps)
+    #model = pylab.polyfit(x, y, 1)
+    #evaluate_models_on_training(x, y, [model])
 
     # Part B
-    # TODO: replace this line with your code
+    #climate = Climate('data.csv')
+    #years = list(TRAINING_INTERVAL)
+    #avg_temps = gen_cities_avg(climate, CITIES, years)
+    #x = pylab.array(years)
+    #model = pylab.polyfit(x, avg_temps, 1)
+    #evaluate_models_on_training(x, avg_temps, [model])
 
     # Part C
     # TODO: replace this line with your code
