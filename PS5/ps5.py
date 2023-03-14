@@ -224,24 +224,27 @@ def evaluate_models_on_training(x, y, models):
         None
     """
     for model in models:
+        # compute predicted values
+        predicted = pylab.polyval(model, x)
+
         # compute R-squared
-        r_sq = r_squared(y, pylab.polyval(model, x))
+        r_sq = r_squared(y, predicted)
 
         # for linear model, compute SE/slope
         if len(model) == 2:
-            se_slope = se_over_slope(x, y, pylab.polyval(model, x), model)
+            se_slope = se_over_slope(x, y, predicted, model)
 
         # plot results
         pylab.figure()
         pylab.plot(x, y, 'bo', label='Data')
-        pylab.plot(x, pylab.polyval(model, x), 'r-', label='Polynomial fit')
+        pylab.plot(x, predicted, 'r-', label=f'Degree {len(model)-1} Polynomial Fit')
         pylab.xlabel('Years')
         pylab.ylabel('Temperature (C)')
         pylab.legend(loc='best')
         if len(model) == 2:
             pylab.title(f'Best Fit Line: \nR-squared = {r_sq} \nSE/slope = {se_slope}')    
         else:
-            pylab.title(f'Best Fit Degree-{len(model)} Polynomial: \nR-squared = {r_sq}')
+            pylab.title(f'Best Fit Degree {len(model)-1} Polynomial: \nR-squared = {r_sq}')
         pylab.show()
 
 def gen_cities_avg(climate, multi_cities, years):
@@ -408,16 +411,22 @@ if __name__ == '__main__':
     #evaluate_models_on_training(x, y, [model])
 
     # Part C
-    climate = Climate('data.csv')
-    years = list(TRAINING_INTERVAL)
-    avg_temps = gen_cities_avg(climate, CITIES, years)
-    x = pylab.array(years)
-    y = moving_average(avg_temps, 5)
-    model = pylab.polyfit(x, y, 1)
-    evaluate_models_on_training(x, y, [model])
+    #climate = Climate('data.csv')
+    #years = list(TRAINING_INTERVAL)
+    #avg_temps = gen_cities_avg(climate, CITIES, years)
+    #x = pylab.array(years)
+    #y = moving_average(avg_temps, 5)
+    #model = pylab.polyfit(x, y, 1)
+    #evaluate_models_on_training(x, y, [model])
 
     # Part D.2I: Generate more models
-    pass
+    climate = Climate('data.csv')
+    training_years = list(TRAINING_INTERVAL)
+    training_temps = gen_cities_avg(climate, CITIES, training_years)
+    x = pylab.array(training_years)
+    y = moving_average(training_temps, 5)
+    models = [pylab.polyfit(x, y, deg) for deg in (1, 2, 20)]
+    evaluate_models_on_training(x, y, models)
 
     # Part D.2II: Predict the results
     # TODO: replace this line with your code
