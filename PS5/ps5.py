@@ -429,7 +429,11 @@ if __name__ == '__main__':
     evaluate_models_on_training(x, y, models)
 
     # Part D.2II: Predict the results
-    # TODO: replace this line with your code
+    testing_years = list(TESTING_INTERVAL)
+    testing_temps = gen_cities_avg(climate, CITIES, testing_years)
+    x = pylab.array(testing_years)
+    y = moving_average(testing_temps, 5)
+    evaluate_models_on_testing(x, y, models)
 
     # Part E
     # TODO: replace this line with your code
