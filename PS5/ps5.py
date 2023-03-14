@@ -356,8 +356,22 @@ def evaluate_models_on_testing(x, y, models):
     Returns:
         None
     """
-    # TODO
-    pass
+    for model in models:
+        # compute predicted values 
+        predicted = pylab.polyval(model, x)
+
+        # compute RMSE
+        RMSE = rmse(y, predicted)
+        
+        # plot results
+        pylab.figure()
+        pylab.plot(x, y, 'bo', label='Data')
+        pylab.plot(x, predicted, 'r-', label=f'Degree {len(model)-1} Polynomial Fit')
+        pylab.xlabel('Years')
+        pylab.ylabel('Temperature (C)')
+        pylab.legend(loc='best')
+        pylab.title(f'Best Fit Degree {len(model)-1} Polynomial: \nRMSE = {RMSE}')
+        pylab.show()
 
 if __name__ == '__main__':
 
@@ -402,7 +416,10 @@ if __name__ == '__main__':
     model = pylab.polyfit(x, y, 1)
     evaluate_models_on_training(x, y, [model])
 
-    # Part D.2
+    # Part D.2I: Generate more models
+    pass
+
+    # Part D.2II: Predict the results
     # TODO: replace this line with your code
 
     # Part E
