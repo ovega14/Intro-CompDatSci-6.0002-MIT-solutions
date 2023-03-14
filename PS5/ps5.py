@@ -376,12 +376,12 @@ if __name__ == '__main__':
     #evaluate_models_on_training(x, y, [model])
 
     # Part B
-    #climate = Climate('data.csv')
-    #years = list(TRAINING_INTERVAL)
-    #avg_temps = gen_cities_avg(climate, CITIES, years)
-    #x = pylab.array(years)
-    #model = pylab.polyfit(x, avg_temps, 1)
-    #evaluate_models_on_training(x, avg_temps, [model])
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    avg_temps = gen_cities_avg(climate, CITIES, years)
+    x = pylab.array(years)
+    model = pylab.polyfit(x, avg_temps, 1)
+    evaluate_models_on_training(x, avg_temps, [model])
 
     # Part C
     # TODO: replace this line with your code
