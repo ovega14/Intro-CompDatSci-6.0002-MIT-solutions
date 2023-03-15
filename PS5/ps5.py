@@ -389,61 +389,61 @@ def evaluate_models_on_testing(x, y, models):
 if __name__ == '__main__':
 
     # Part A.4I: January 10
-    #climate = Climate('data.csv')
-    #years = list(TRAINING_INTERVAL)
-    #temps = []
-    #for year in years:
-    #    temp = climate.get_daily_temp('NEW YORK', 1, 10, year)
-    #    temps.append(temp)
-    #x = pylab.array(years)
-    #y = pylab.array(temps)
-    #model = pylab.polyfit(x, y, 1)
-    #evaluate_models_on_training(x, y, [model])
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    temps = []
+    for year in years:
+        temp = climate.get_daily_temp('NEW YORK', 1, 10, year)
+        temps.append(temp)
+    x = pylab.array(years)
+    y = pylab.array(temps)
+    models = generate_models(x, y, [1])
+    evaluate_models_on_training(x, y, models)
 
     # Part A.4II: Annual Temperature
-    #climate = Climate('data.csv')
-    #years = list(TRAINING_INTERVAL)
-    #avg_temps = []
-    #for year in years:
-    #    temps = climate.get_yearly_temp('NEW YORK', year)
-    #    avg_temps.append(sum(temps)/len(temps))
-    #x = pylab.array(years)
-    #y = pylab.array(avg_temps)
-    #model = pylab.polyfit(x, y, 1)
-    #evaluate_models_on_training(x, y, [model])
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    avg_temps = []
+    for year in years:
+        temps = climate.get_yearly_temp('NEW YORK', year)
+        avg_temps.append(sum(temps)/len(temps))
+    x = pylab.array(years)
+    y = pylab.array(avg_temps)
+    models = generate_models(x, y, [1])
+    evaluate_models_on_training(x, y, models)
 
     # Part B
-    #climate = Climate('data.csv')
-    #years = list(TRAINING_INTERVAL)
-    #y = gen_cities_avg(climate, CITIES, years)
-    #x = pylab.array(years)
-    #model = pylab.polyfit(x, y, 1)
-    #evaluate_models_on_training(x, y, [model])
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    y = gen_cities_avg(climate, CITIES, years)
+    x = pylab.array(years)
+    models = generate_models(x, y, [1])
+    evaluate_models_on_training(x, y, models)
 
     # Part C
-    #climate = Climate('data.csv')
-    #years = list(TRAINING_INTERVAL)
-    #avg_temps = gen_cities_avg(climate, CITIES, years)
-    #x = pylab.array(years)
-    #y = moving_average(avg_temps, 5)
-    #model = pylab.polyfit(x, y, 1)
-    #evaluate_models_on_training(x, y, [model])
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    avg_temps = gen_cities_avg(climate, CITIES, years)
+    x = pylab.array(years)
+    y = moving_average(avg_temps, 5)
+    models = generate_models(x, y, [1])
+    evaluate_models_on_training(x, y, models)
 
     # Part D.2I: Generate more models
-    #climate = Climate('data.csv')
-    #training_years = list(TRAINING_INTERVAL)
-    #training_temps = gen_cities_avg(climate, CITIES, training_years)
-    #x = pylab.array(training_years)
-    #y = moving_average(training_temps, 5)
-    #models = [pylab.polyfit(x, y, deg) for deg in (1, 2, 20)]
-    #evaluate_models_on_training(x, y, models)
+    climate = Climate('data.csv')
+    training_years = list(TRAINING_INTERVAL)
+    training_temps = gen_cities_avg(climate, CITIES, training_years)
+    x = pylab.array(training_years)
+    y = moving_average(training_temps, 5)
+    models = generate_models(x, y, [1, 2, 20])
+    evaluate_models_on_training(x, y, models)
 
     # Part D.2II: Predict the results
-    #testing_years = list(TESTING_INTERVAL)
-    #testing_temps = gen_cities_avg(climate, CITIES, testing_years)
-    #x = pylab.array(testing_years)
-    #y = moving_average(testing_temps, 5)
-    #evaluate_models_on_testing(x, y, models)
+    testing_years = list(TESTING_INTERVAL)
+    testing_temps = gen_cities_avg(climate, CITIES, testing_years)
+    x = pylab.array(testing_years)
+    y = moving_average(testing_temps, 5)
+    evaluate_models_on_testing(x, y, models)
 
     # Part E
     climate = Climate('data.csv')
@@ -451,5 +451,5 @@ if __name__ == '__main__':
     temps = gen_std_devs(climate, CITIES, years)
     x = pylab.array(years)
     y = moving_average(temps, 5)
-    model = pylab.polyfit(x, y, 1)
-    evaluate_models_on_training(x, y, [model])
+    models = generate_models(x, y, [1])
+    evaluate_models_on_training(x, y, models)
