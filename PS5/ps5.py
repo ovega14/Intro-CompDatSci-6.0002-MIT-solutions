@@ -163,12 +163,7 @@ def generate_models(x, y, degs):
         a list of pylab arrays, where each array is a 1-d array of coefficients
         that minimizes the squared error of the fitting polynomial
     """
-    models = []
-    
-    # iterate over the degree of polynomial to be fitted
-    for d in degs:
-        model = pylab.polyfit(x, y, d)
-        models.append(model)
+    models = [pylab.polyfit(x, y, d) for d in degs]
     
     return models
 
@@ -435,20 +430,26 @@ if __name__ == '__main__':
     #evaluate_models_on_training(x, y, [model])
 
     # Part D.2I: Generate more models
-    climate = Climate('data.csv')
-    training_years = list(TRAINING_INTERVAL)
-    training_temps = gen_cities_avg(climate, CITIES, training_years)
-    x = pylab.array(training_years)
-    y = moving_average(training_temps, 5)
-    models = [pylab.polyfit(x, y, deg) for deg in (1, 2, 20)]
-    evaluate_models_on_training(x, y, models)
+    #climate = Climate('data.csv')
+    #training_years = list(TRAINING_INTERVAL)
+    #training_temps = gen_cities_avg(climate, CITIES, training_years)
+    #x = pylab.array(training_years)
+    #y = moving_average(training_temps, 5)
+    #models = [pylab.polyfit(x, y, deg) for deg in (1, 2, 20)]
+    #evaluate_models_on_training(x, y, models)
 
     # Part D.2II: Predict the results
-    testing_years = list(TESTING_INTERVAL)
-    testing_temps = gen_cities_avg(climate, CITIES, testing_years)
-    x = pylab.array(testing_years)
-    y = moving_average(testing_temps, 5)
-    evaluate_models_on_testing(x, y, models)
+    #testing_years = list(TESTING_INTERVAL)
+    #testing_temps = gen_cities_avg(climate, CITIES, testing_years)
+    #x = pylab.array(testing_years)
+    #y = moving_average(testing_temps, 5)
+    #evaluate_models_on_testing(x, y, models)
 
     # Part E
-    # TODO: replace this line with your code
+    climate = Climate('data.csv')
+    years = list(TRAINING_INTERVAL)
+    temps = gen_std_devs(climate, CITIES, years)
+    x = pylab.array(years)
+    y = moving_average(temps, 5)
+    model = pylab.polyfit(x, y, 1)
+    evaluate_models_on_training(x, y, [model])
